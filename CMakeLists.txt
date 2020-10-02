@@ -49,15 +49,8 @@ else()
     find_package(Qca-qt5 ${QCA_MIN_VERSION} REQUIRED)
     set(Qca_LIBRARY qca-qt5)
 
-    set(KF5_REQUIRED_COMPONENTS I18n ConfigWidgets DBusAddons IconThemes Notifications KIO KCMUtils Service Solid Kirigami2 People)
-    set(KF5_OPTIONAL_COMPONENTS DocTools)
-
-    set_package_properties(KF5Kirigami2 PROPERTIES
-        DESCRIPTION "QtQuick plugins to build user interfaces based on KDE UX guidelines"
-        PURPOSE "Required for KDE Connect's QML-based GUI applications"
-        URL "https://www.kde.org/products/kirigami/"
-        TYPE RUNTIME
-    )
+    set(KF5_REQUIRED_COMPONENTS I18n ConfigWidgets DBusAddons IconThemes Notifications KIO KCMUtils Service Solid CoreAddons Config)
+    set(KF5_OPTIONAL_COMPONENTS DocTools Kirigami2 People)
 
     if(UNIX AND NOT APPLE)
         find_package(KF5PulseAudioQt)
@@ -102,18 +95,24 @@ if (NOT SAILFISHOS)
     add_subdirectory(icon)
     add_subdirectory(data)
     add_subdirectory(cli)
-    add_subdirectory(declarativeplugin)
 
     add_subdirectory(kcm)
     add_subdirectory(kcmplugin)
     add_subdirectory(daemon)
-    add_subdirectory(app)
     add_subdirectory(indicator)
     add_subdirectory(urlhandler)
     add_subdirectory(nautilus-extension)
     add_subdirectory(fileitemactionplugin)
-    add_subdirectory(smsapp)
     add_subdirectory(settings)
+
+    if(KF5Kirigami2_FOUND)
+        add_subdirectory(app)
+        add_subdirectory(declarativeplugin)
+
+        if(KF5PeopleVCard_FOUND)
+            add_subdirectory(smsapp)
+        endif()
+    endif()
 
     if(NOT WIN32)
         add_subdirectory(kio)
